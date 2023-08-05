@@ -9,7 +9,6 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 **_Test Cases_**:
 
 1.  [x] should return 404 when not records
-1.  [ ] should throw bad request when there are invalid params
 1.  [x] should return array of all records
 1.  [x] param country_id should be a number
 1.  [x] should return a specify country by id
