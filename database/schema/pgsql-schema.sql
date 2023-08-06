@@ -27,7 +27,7 @@ SET default_table_access_method = heap;
 CREATE TABLE public.countries (
     id bigint NOT NULL,
     name character varying(100) NOT NULL,
-    population integer NOT NULL
+    population bigint NOT NULL
 );
 
 
@@ -48,40 +48,6 @@ CREATE SEQUENCE public.countries_id_seq
 --
 
 ALTER SEQUENCE public.countries_id_seq OWNED BY public.countries.id;
-
-
---
--- Name: failed_jobs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.failed_jobs (
-    id bigint NOT NULL,
-    uuid character varying(255) NOT NULL,
-    connection text NOT NULL,
-    queue text NOT NULL,
-    payload text NOT NULL,
-    exception text NOT NULL,
-    failed_at timestamp(0) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
-
-
---
--- Name: failed_jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.failed_jobs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: failed_jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.failed_jobs_id_seq OWNED BY public.failed_jobs.id;
 
 
 --
@@ -122,7 +88,7 @@ ALTER SEQUENCE public.migrations_id_seq OWNED BY public.migrations.id;
 CREATE TABLE public.municipalities (
     id bigint NOT NULL,
     name character varying(100) NOT NULL,
-    population integer NOT NULL,
+    population bigint NOT NULL,
     state_id bigint NOT NULL
 );
 
@@ -246,17 +212,41 @@ ALTER SEQUENCE public.states_id_seq OWNED BY public.states.id;
 
 
 --
+-- Name: zones; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.zones (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    population integer NOT NULL,
+    parish_id bigint NOT NULL
+);
+
+
+--
+-- Name: zones_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.zones_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: zones_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.zones_id_seq OWNED BY public.zones.id;
+
+
+--
 -- Name: countries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.countries ALTER COLUMN id SET DEFAULT nextval('public.countries_id_seq'::regclass);
-
-
---
--- Name: failed_jobs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.failed_jobs ALTER COLUMN id SET DEFAULT nextval('public.failed_jobs_id_seq'::regclass);
 
 
 --
@@ -295,27 +285,18 @@ ALTER TABLE ONLY public.states ALTER COLUMN id SET DEFAULT nextval('public.state
 
 
 --
+-- Name: zones id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.zones ALTER COLUMN id SET DEFAULT nextval('public.zones_id_seq'::regclass);
+
+
+--
 -- Name: countries countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.countries
     ADD CONSTRAINT countries_pkey PRIMARY KEY (id);
-
-
---
--- Name: failed_jobs failed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.failed_jobs
-    ADD CONSTRAINT failed_jobs_pkey PRIMARY KEY (id);
-
-
---
--- Name: failed_jobs failed_jobs_uuid_unique; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.failed_jobs
-    ADD CONSTRAINT failed_jobs_uuid_unique UNIQUE (uuid);
 
 
 --
@@ -367,6 +348,14 @@ ALTER TABLE ONLY public.states
 
 
 --
+-- Name: zones zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.zones
+    ADD CONSTRAINT zones_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: personal_access_tokens_tokenable_type_tokenable_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -386,7 +375,7 @@ ALTER TABLE ONLY public.states
 --
 
 ALTER TABLE ONLY public.municipalities
-    ADD CONSTRAINT id FOREIGN KEY (state_id) REFERENCES public.countries(id) ON UPDATE CASCADE;
+    ADD CONSTRAINT id FOREIGN KEY (state_id) REFERENCES public.states(id) ON UPDATE CASCADE;
 
 
 --
@@ -395,6 +384,14 @@ ALTER TABLE ONLY public.municipalities
 
 ALTER TABLE ONLY public.parish
     ADD CONSTRAINT id FOREIGN KEY (municipality_id) REFERENCES public.municipalities(id) ON UPDATE CASCADE;
+
+
+--
+-- Name: zones id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.zones
+    ADD CONSTRAINT id FOREIGN KEY (parish_id) REFERENCES public.parish(id) ON UPDATE CASCADE;
 
 
 --
@@ -424,12 +421,12 @@ SET row_security = off;
 --
 
 COPY public.migrations (id, migration, batch) FROM stdin;
-1	2019_12_14_000001_create_personal_access_tokens_table	1
-2	2023_07_01_134627_countries	1
-3	2023_07_02_131523_states	1
-4	2023_07_02_131538_municipalities	1
-5	2023_07_02_131550_parish	1
-6	2023_07_02_131555_zones	1
+16	2019_12_14_000001_create_personal_access_tokens_table	1
+17	2023_07_01_134627_countries	1
+18	2023_07_02_131523_states	1
+19	2023_07_02_131538_municipalities	1
+20	2023_07_02_131550_parish	1
+21	2023_07_02_131555_zones	1
 \.
 
 
@@ -437,7 +434,7 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 -- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.migrations_id_seq', 6, true);
+SELECT pg_catalog.setval('public.migrations_id_seq', 21, true);
 
 
 --

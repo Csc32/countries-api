@@ -16,7 +16,7 @@ return new class extends Migration
             Schema::create('parish', function (Blueprint $table) {
                 $table->id()->autoIncrement();
                 $table->string("name", 100);
-                $table->integer("population", false, false);
+                $table->mediumInteger("population", false, false);
                 $table->foreignId("municipality_id")->constrained(
                     table: 'municipalities',
                     indexName: 'id'

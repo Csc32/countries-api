@@ -17,9 +17,9 @@ return new class extends Migration
             Schema::create('municipalities', function (Blueprint $table) {
                 $table->id()->autoIncrement();
                 $table->string("name", 100);
-                $table->mediumIncrements("population", false, false);
+                $table->bigInteger("population", false, false);
                 $table->foreignId("state_id")->constrained(
-                    table: 'countries',
+                    table: 'states',
                     indexName: 'id'
                 )->onUpdate("cascade");
             });
