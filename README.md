@@ -26,7 +26,10 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 **_Test Cases_**:
 
 1.  [x] should return bad request if there is not data of the country
-1.  [ ] should throw bad request when there is a country with the id provided
+1.  [x] should return bad request when there is a country with the id provided
+1.  [x] should return bad request when a invalid id is provided
+1.  [ ] should return bad request when a invalid name is provided
+1.  [ ] should return bad request when a invalid population is provided
 1.  [ ] should throw bad request when there are invalid params for insert
 1.  [x] should insert data if there is valid params of the country
 
