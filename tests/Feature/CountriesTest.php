@@ -484,7 +484,7 @@ class CountriesTest extends TestCase
     {
         $country = Countries::factory()->count(2)->create();
 
-        $testId = 1000;
+        $testId = 10;
         $expectedJson = [
             "message" => "Was a problem to delete the country",
             "errors" => [
@@ -502,16 +502,17 @@ class CountriesTest extends TestCase
     // delete end point
     public function should_delete_a_country(): void
     {
-        $country = Countries::factory()->count(2)->create();
+        $country = Countries::factory()->create();
 
-        $testId = $country[0]->id;
+        $testId = $country->id;
         $expectedJson = [
             "message" => "country deleted correctly"
         ];
 
         $response = $this->delete($this->endPoint . "/" . $testId);
 
+        $response->assertOk()->assertJson($expectedJson);
 
-        $response->assertBadRequest()->assertJson($expectedJson);
+        $this->assertModelMissing($country);
     }
 }
