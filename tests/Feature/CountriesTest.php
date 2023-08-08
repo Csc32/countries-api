@@ -456,4 +456,61 @@ class CountriesTest extends TestCase
         $dbData = DB::table("countries")->where("id", "=", $country[0]->id)->get(["name", "population"]);
         $this->assertSame(json_encode($testJson), json_encode($dbData[0]));
     }
+
+    /** @test */
+    // delete end point
+    public function return_bad_request_if_the_id_is_invalid(): void
+    {
+        $country = Countries::factory()->count(2)->create();
+
+        $invalidParam = "b";
+
+        $expectedJson = [
+            "message" => "was a problem to delete the country",
+            "errors" => [
+                "title" => "Bad request",
+                "status" => 400,
+                "details" => "The param privided is invalid expected a number given $invalidParam"
+            ]
+        ];
+        $response = $this->delete($this->endPoint . "/" . $invalidParam);
+
+        $response->assertBadRequest()->assertJson($expectedJson);
+    }
+
+    /** @test */
+    // delete end point
+    public function return_not_found_if_country_not_exist(): void
+    {
+        $country = Countries::factory()->count(2)->create();
+
+        $testId = 1000;
+        $expectedJson = [
+            "errors" => [
+                "title" => "Not Found",
+                "status" => 404,
+                "details" => "Not exist a country with id $testId"
+            ]
+        ];
+        $response = $this->delete($this->endPoint . "/" . $testId);
+
+        $response->assertBadRequest()->assertJson($expectedJson);
+    }
+
+    /** @test */
+    // delete end point
+    public function should_delete_a_country(): void
+    {
+        $country = Countries::factory()->count(2)->create();
+
+        $testId = $country[0]->id;
+        $expectedJson = [
+            "message" => "country deleted correctly"
+        ];
+
+        $response = $this->delete($this->endPoint . "/" . $testId);
+
+
+        $response->assertBadRequest()->assertJson($expectedJson);
+    }
 }

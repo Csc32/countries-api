@@ -43,10 +43,9 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 
 **_Test Cases_**:
 
-1.  [ ] should return bad request if there is not data of the country
-1.  [ ] should return bad request and error message if inputs are invalids
-1.  [ ] should return a message when data has been deleted
-
+1. [ ]  should return bad request and error message if the id is invalid
+1. [ ]  should return bad request if there is not data of the country
+1. [ ]  should return a message when data has been deleted
 ## EndPoints for States:
 
 -   **GET: /api/states/{state_id}**
