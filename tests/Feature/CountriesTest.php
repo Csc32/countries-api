@@ -5,9 +5,8 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Countries;
 use App\Models\States;
-use Database\Factories\CountriesFactory;
 use Illuminate\Support\Facades\DB;
-use PHPUnit\Framework\Constraint\Count;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class CountriesTest extends TestCase
@@ -20,15 +19,14 @@ class CountriesTest extends TestCase
     /** @test */
     public function return_404_when_not_countries(): void
     {
-        $countries = Countries::factory()->count(0)->create();
-        $response = $this->getJson($this->endPoint);
-        // response with the same status code
-        $response->assertStatus(404);
-        // response with the same content
-        $response->assertJson([
+        Countries::factory()->count(0)->create();
+        $expectedJson = [
             'message' => "There is not data in the api"
-        ]);
-        $response->assertJsonIsObject();
+        ];
+
+        $response = $this->getJson($this->endPoint);
+
+        $response->assertStatus(404)->assertJson($expectedJson);
     }
     //this test have been desactivated
 
@@ -45,7 +43,7 @@ class CountriesTest extends TestCase
     public function return_array_of_all_countries(): void
     {
         //insert data in db
-        $countries =  Countries::factory()->count(10)->create();
+        $countries =  Countries::factory()->count(3)->create();
 
         $response = $this->getJson($this->endPoint);
 
@@ -164,32 +162,30 @@ class CountriesTest extends TestCase
     public function should_return_all_state_of_a_country(): void
     {
         $country = Countries::factory()->count(5)->hasStates(5)->create();
-        //$statesOfCountry = DB::table("states")->where("country_id", "=", $country[1]->id)->get(["id", "name"]);
+        $statesOfCountry = States::query()->where("country_id", "=", $country[1]->id)->get(['id', 'name'])->toArray();
         $expectedJsonStructure = [
-            'country' => [
-                "data" => ["id", "name", "population"],
+            $country[1]->name => [
                 "states" => ["*" => ["id", "name"]]
             ]
         ];
 
         $expectedJson = [
-            'country' => [
-                "data" => ["id" => $country[1]->id, "name" => $country[1]->name, "population" => $country[1]->population],
+            $country[1]->name => [
                 //"states" => $statesOfCountry, -> this need to modify to improve the test
             ]
+        ];
+
+        $expectedStates = [
+            "states" => $statesOfCountry
         ];
         //get response
         $response = $this->getJson($this->endPoint . "/getStates/" . $country[1]->id);
         // validate expected json results
-        $response->assertJsonStructure($expectedJsonStructure);
+        $response->assertJsonStructure($expectedJsonStructure)
+            ->assertJsonCount(1)
+            ->assertJson($expectedJson);
 
-        $response->assertJson($expectedJson);
-
-        $response->assertJsonCount(2, "country");
-
-        $response->assertJsonIsObject("country");
-
-        $response->assertJsonCount(5, "country.states")->assertJsonIsArray("country.states");
+        $this->assertSame(json_encode($expectedStates), json_encode($response->collect()->first()));
     }
     /** @test */
     //post test
@@ -207,14 +203,161 @@ class CountriesTest extends TestCase
     }
 
     /** @test */
+    //post test
+    /**
+     * This test was desactivated because change use case
+    public function return_bad_request_if_there_is_a_country_with_id_provided(): void
+    {
+        $country = Countries::factory()->create();
+
+        $countryJson = [
+            "country" => [
+                "id" => $country->id,
+                "name" => "Chile",
+                "population" => 2000
+            ]
+        ];
+
+        $expectedJson = [
+            "error" => "A country with id provided already exist",
+            "country" => [
+                "id" => $country->id,
+                "name" => $country->name,
+                "population" => $country->population
+            ]
+        ];
+
+
+        $response = $this->postJson(
+            $this->endPoint . "/store",
+            $countryJson
+        );
+
+        $response->assertStatus(400);
+
+        $response->assertJson($expectedJson);
+    }
+     */
+    /** @test */
+    //post test
+    public function param_not_have_a_id(): void
+    {
+        $country = Countries::factory()->create();
+
+        $expectedJson = [
+            "message" => "Invalid params, please check",
+            "errors" => [
+                "title" => "Bad request",
+                "status" => 400,
+                "details" => "ID provided, please delete it",
+            ]
+        ];
+
+        $testJson = [
+            "country" => [
+                "id" => "a",
+                "name" => "Chile",
+                "population" => 2000
+            ]
+        ];
+
+        $response = $this->postJson($this->endPoint . "/store", $testJson);
+
+        $response->assertBadRequest()->assertJson($expectedJson);
+    }
+    /** @test */
+    //post test
+    public function return_bad_request_when_there_is_invalid_name_for_insert(): void
+    {
+        $country = Countries::factory()->create();
+
+        $expectedJson = [
+            "message" => "Invalid params, please check",
+            "errors" => [
+                "title" => "Bad request",
+                "status" => 400,
+                "details" => "Name should be a string",
+            ]
+        ];
+
+        $testJson = [
+            "country" => [
+                "name" => 2000,
+                "population" => 2000
+            ]
+        ];
+
+        $response = $this->postJson($this->endPoint . "/store", $testJson);
+        $response->assertBadRequest()->assertJsonStructure([
+            "message",
+            "errors" => [
+                "title",
+                "status",
+                "details"
+            ]
+        ])->assertJson([
+            "message" => $expectedJson['message'],
+            "errors" => [
+                "title" => $expectedJson['errors']['title'],
+                "status" =>  $expectedJson['errors']['status'],
+            ]
+        ])->assertJsonFragment(
+            [
+                "details" =>  $expectedJson['errors']['details']
+            ]
+        );
+    }
+    /** @test */
+    //post test
+    public function return_bad_request_when_there_is_invalid_population_for_insert(): void
+    {
+        $country = Countries::factory()->create();
+
+        $expectedJson = [
+            "message" => "Invalid params, please check",
+            "errors" => [
+                "title" => "Bad request",
+                "status" => 400,
+                "details" => "Population should be a number",
+            ]
+        ];
+
+        $testJson = [
+            "country" => [
+                "name" => "Chile",
+                "population" => "2000"
+            ]
+        ];
+
+        $response = $this->postJson($this->endPoint . "/store", $testJson);
+
+        $response->assertBadRequest()->assertJsonStructure([
+            "message",
+            "errors" => [
+                "title",
+                "status",
+                "details"
+            ]
+        ])->assertJson([
+            "message" => $expectedJson['message'],
+            "errors" => [
+                "title" => $expectedJson['errors']['title'],
+                "status" =>  $expectedJson['errors']['status'],
+            ]
+        ])->assertJsonFragment(
+            [
+                "details" =>  $expectedJson['errors']['details']
+            ]
+        );
+    }
+    /** @test */
 
     //post test
-    public function insert_country_if_there_is_valid_params_insert(): void
+    public function insert_country_if_there_is_valid_params(): void
     {
         $country = Countries::factory()->create();
 
         $inputJson =  ["country" => [
-            'id' => rand(200, 300),
             'name' => 'example Contry',
             'population' => rand(2000, 3000),
         ]];
