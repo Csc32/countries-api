@@ -43,19 +43,50 @@ class CountriesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $country_id)
+    public function store(Request $country_id): JsonResponse
     {
         //
         $data = $country_id->input("country");
+
+        //variables for return json
+
+        $invalidData = [
+            "error" => "Required parameters are missing"
+        ];
+
+        $errorResponse = [
+            "message" => 'Invalid params, please check',
+            "errors" => [
+                "title" => "Bad request",
+                "status" => 400,
+                "details" => ""
+            ]
+        ];
+        $typeOfDetail = [
+            "id" => "ID provided, please delete it",
+            "name" => "Name should be a string",
+            "population" =>  "Population should be a number"
+        ];
+
+        $successResponse = [
+            "message" => "country inserted correctly"
+        ];
         if (empty($data) || count($data) == 0) {
             return response()->json(
-                [
-                    "error" => "Required parameters are missing"
-                ],
+                $invalidData,
                 400
             );
         }
-        $result =  DB::table("countries")->insert($data);
+        foreach ($data as $key => $value) {
+            if (isset($key) && $key == "id" || $key == "name" && is_numeric($value) || $key == 'population' && is_string($value)) {
+                $errorResponse["errors"]['details'] = $typeOfDetail[$key];
+                return response()->json(
+                    $errorResponse,
+                    400
+                );
+            }
+        }
+        $result =  Countries::query()->create($data);
         if ($result) {
             return response()->json(
                 [
@@ -89,31 +120,34 @@ class CountriesController extends Controller
 
     public function getStates($country_id = null)
     {
+        $invalidCountryMessage = [
+            'message' => "param should be a number"
+        ];
         if (isset($country_id) && !is_numeric($country_id)) {
-            return response()->json([
-                'message' => "param should be a number"
-            ], 400);
+            return response()->json($invalidCountryMessage, 400);
         }
-        //$states = DB::table("states")->join("countries", "countries.id", "=", "states.country_id")->select("states.*", "countries.id")->where("id", "=", $country)->get();
-        //$states = DB::table("states")->where("country_id", $country)->get();
-        //$countryData = Countries::query()->where("id", "=", $country)->first();
-        $countryData = Countries::find($country_id);
+        $countryData = Countries::query()->find($country_id, ['id', 'name']);
         $statesOfCountry = States::query()->where("country_id", $country_id)->get(["id", "name"]);
-        if ($statesOfCountry->isEmpty()) {
-            return response()->json([
-                'message' => "States not found in the country",
-                "country" => [
-                    "id" => $countryData->id,
-                    "name" => $countryData->name,
-                ]
-            ], 404);
-        }
-        return response()->json([
+        $countryNotFoundMessage = [
+            'message' => "States not found in the country",
             "country" => [
-                "data" => $countryData,
+                "id" => $countryData->id,
+                "name" => $countryData->name,
+            ]
+        ];
+        if ($statesOfCountry->isEmpty()) {
+            return response()->json(
+                $countryNotFoundMessage,
+                404
+            );
+        }
+        $countryName = $countryData->name;
+        $sucessResponse = [
+            "$countryName" => [
                 'states' => $statesOfCountry,
             ],
-        ], 200);
+        ];
+        return response()->json($sucessResponse, 200);
     }
 
 
