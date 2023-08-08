@@ -470,7 +470,7 @@ class CountriesTest extends TestCase
             "errors" => [
                 "title" => "Bad request",
                 "status" => 400,
-                "details" => "The param privided is invalid expected a number given $invalidParam"
+                "details" => "The param provided is invalid expected a number given $invalidParam"
             ]
         ];
         $response = $this->delete($this->endPoint . "/" . $invalidParam);
