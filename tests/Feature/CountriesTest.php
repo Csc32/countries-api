@@ -466,7 +466,7 @@ class CountriesTest extends TestCase
         $invalidParam = "b";
 
         $expectedJson = [
-            "message" => "was a problem to delete the country",
+            "message" => "Was a problem to delete the country",
             "errors" => [
                 "title" => "Bad request",
                 "status" => 400,
@@ -486,6 +486,7 @@ class CountriesTest extends TestCase
 
         $testId = 1000;
         $expectedJson = [
+            "message" => "Was a problem to delete the country",
             "errors" => [
                 "title" => "Not Found",
                 "status" => 404,
