@@ -198,8 +198,39 @@ class CountriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Countries $countries)
+    public function destroy($country_id, Countries $countries)
     {
+        $errorMessage = [
+            "message" => "Was a problem to delete the country",
+            "errors" => [
+                'title' => 'Bad request',
+                'status' => 400,
+                'details' => "The param provided is invalid expected a number given $country_id",
+            ]
+        ];
+
+        $successMessage = [
+            "message" => "country deleted correctly"
+        ];
+
+        if (empty($country_id) || !is_numeric($country_id)) {
+            return response()->json($errorMessage, 400);
+        }
+        $result = $countries->query()->find($country_id);
+        if (!isset($result)) {
+
+            $errorMessage['errors']['title'] = "Not Found";
+
+            $errorMessage['errors']['status'] = 404;
+
+            $errorMessage['errors']['details'] = "Not exist a country with id $country_id";
+
+            return response()->json($errorMessage, 400);
+        }
+
+        $result->delete();
+
+        return response()->json($successMessage, 200);
         //
     }
 }
