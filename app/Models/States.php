@@ -10,6 +10,8 @@ class States extends Model
 {
     public $timestamps = false;
 
+    protected $fillable = ['name', 'population', "country_id"];
+
     public function country(): BelongsTo
     {
         return $this->belongsTo(Countries::class, "country_id");
