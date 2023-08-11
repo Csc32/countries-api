@@ -61,9 +61,12 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 
 **_Test cases_**:
 
-1.  [ ] should return bad request if not a valid param
-1.  [ ] should throw an error if the id is the same to other states
-1.  [ ] should return a success message if data was inserted
+1.  [x] should return bad request if not a valid param
+1.  [x] params should not have id 
+1.  [x] name is a string
+1.  [x] population is integer
+1.  [x] country id belongs to a valid country
+1.  [x] should return a success message if data was inserted
 
 -   **PUT: /api/states/{state_id}**
 
