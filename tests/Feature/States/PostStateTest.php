@@ -151,5 +151,11 @@ class PostStateTest extends TestCase
         $response = $this->postJson($this->url, $testJson);
 
         $response->assertOk()->assertjson($expectedjson);
+
+
+        $this->assertDatabaseHas("states", [
+            "name" => "Caracas",
+            "country_id" => $country[0]->id
+        ]);
     }
 }
