@@ -196,7 +196,7 @@ class CountriesTest extends TestCase
             "error" => "Required parameters are missing"
         ];
         $response = $this->postJson(
-            $this->endPoint . "/store",
+            $this->endPoint,
             ["country" => []]
         );
         $response->assertStatus(400)->assertJson($expectedJson);
@@ -261,7 +261,7 @@ class CountriesTest extends TestCase
             ]
         ];
 
-        $response = $this->postJson($this->endPoint . "/store", $testJson);
+        $response = $this->postJson($this->endPoint, $testJson);
 
         $response->assertBadRequest()->assertJson($expectedJson);
     }
@@ -287,7 +287,7 @@ class CountriesTest extends TestCase
             ]
         ];
 
-        $response = $this->postJson($this->endPoint . "/store", $testJson);
+        $response = $this->postJson($this->endPoint, $testJson);
         $response->assertBadRequest()->assertJsonStructure([
             "message",
             "errors" => [
@@ -329,7 +329,7 @@ class CountriesTest extends TestCase
             ]
         ];
 
-        $response = $this->postJson($this->endPoint . "/store", $testJson);
+        $response = $this->postJson($this->endPoint, $testJson);
 
         $response->assertBadRequest()->assertJsonStructure([
             "message",
@@ -368,7 +368,7 @@ class CountriesTest extends TestCase
             "message" => "country inserted correctly"
         ];
         $response = $this->postJson(
-            $this->endPoint . "/store",
+            $this->endPoint,
             $inputJson
         );
         // response with the same stucture
