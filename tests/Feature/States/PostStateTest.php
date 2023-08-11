@@ -20,7 +20,7 @@ class PostStateTest extends TestCase
         States::factory()->create();
 
         $expectedJson = [
-            "message" => "There was a problem to insert the State",
+            "message" => "There was a problem to insert the state",
             "errors" => [
                 "title" => "Bad Request",
                 "code" => 400,
@@ -39,7 +39,7 @@ class PostStateTest extends TestCase
         States::factory()->create();
 
         $expectedJson = [
-            "message" => "There was a problem to insert the State",
+            "message" => "There was a problem to insert the state",
             "errors" => [
                 "title" => "Bad Request",
                 "code" => 400,
@@ -65,7 +65,7 @@ class PostStateTest extends TestCase
         States::factory()->create();
 
         $expectedJson = [
-            "message" => "There was a problem to insert the State",
+            "message" => "There was a problem to insert the state",
             "errors" => [
                 "title" => "Bad Request",
                 "code" => 400,
@@ -90,16 +90,16 @@ class PostStateTest extends TestCase
         states::factory()->create();
 
         $expectedjson = [
-            "message" => "there was a problem to insert the state",
+            "message" => "There was a problem to insert the state",
             "errors" => [
-                "title" => "bad request",
+                "title" => "Bad Request",
                 "code" => 400,
                 "details" => "Population should be integer"
             ]
         ];
 
         $testJson = [
-            "name" => 1,
+            "name" => "Chicago",
             "population" => "1000",
             "country_id" => 1
         ];
@@ -113,17 +113,17 @@ class PostStateTest extends TestCase
         states::factory()->create();
 
         $expectedjson = [
-            "message" => "there was a problem to insert the state",
+            "message" => "There was a problem to insert the state",
             "errors" => [
-                "title" => "bad request",
+                "title" => "Bad Request",
                 "code" => 400,
                 "details" => "Not exists a country with id 1"
             ]
         ];
 
         $testJson = [
-            "name" => 1,
-            "population" => "1000",
+            "name" => "Chicago",
+            "population" => 1000,
             "country_id" => 1
         ];
 
