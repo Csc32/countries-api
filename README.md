@@ -52,9 +52,10 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 
 **_Test cases_**:
 
-1.  [ ] should return 404 if there is not states
-1.  [ ] should return bad request if there is an invalid param _country_id_
-1.  [ ] should return data of all states and status 200
+1.  [x] should return 404 if there is not states
+1.  [x] should return bad request if there is an invalid param 
+1.  [x] should return all states and status 200 
+1.  [x] should return information if state exist 
 
 -   **POST: /api/states/store**
 
