@@ -50,7 +50,7 @@ class GetStatesTest extends TestCase
 
         $response = $this->getJson($this->url . "/b");
 
-        $response->assertNotFound()->assertJson($expectedJson);
+        $response->assertBadRequest()->assertJson($expectedJson);
     }
 
     /** @test */
