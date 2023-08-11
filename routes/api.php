@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountriesController;
+use App\Http\Controllers\StatesController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,13 +15,32 @@ use App\Http\Controllers\CountriesController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// $apiRoutes = [
+//     "countries" => CountriesController::class,
+//     "states" => StatesController::class
+// ];
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::middleware("api")->group(function () {
+    Route::controller(CountriesController::class)->group(function () {
+        Route::get("countries", [CountriesController::class, "index"]);
+        Route::get("countries/{country_id}", [CountriesController::class, "show"]);
+        Route::get("countries/getStates/{country_id}", [CountriesController::class, "getStates"]);
+        Route::post("countries", [CountriesController::class, "store"]);
+        Route::put("countries/{country_id}", [CountriesController::class, "update"]);
+        Route::delete("countries/{country_id}", [CountriesController::class, "destroy"]);
+    });
+
+    Route::controller(StatesController::class)->group(function () {
+        Route::get("states", [statesController::class, "index"]);
+        Route::get("states/{state_id}", [statesController::class, "show"]);
+        Route::post("states", [statesController::class, "store"]);
+        Route::put("states/{state_id}", [statesController::class, "update"]);
+        Route::delete("states/{state_id}", [statesController::class, "destroy"]);
+    });
 });
 
-Route::middleware("api")->apiResource("/countries", CountriesController::class);
-Route::post("/countries/store", [CountriesController::class, "store"]);
-Route::get("/countries/getStates/{country_id}", [CountriesController::class, "getStates"]);
-
-/*"countries/getStates/{country}" => CountriesController::class
-]);*/
+// Route::apiResources($apiRoutes);
