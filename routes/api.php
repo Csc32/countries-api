@@ -25,21 +25,25 @@ use App\Http\Controllers\StatesController;
 // });
 
 Route::middleware("api")->group(function () {
-    Route::controller(CountriesController::class)->group(function () {
-        Route::get("countries", [CountriesController::class, "index"]);
-        Route::get("countries/{country_id}", [CountriesController::class, "show"]);
-        Route::get("countries/getStates/{country_id}", [CountriesController::class, "getStates"]);
-        Route::post("countries", [CountriesController::class, "store"]);
-        Route::put("countries/{country_id}", [CountriesController::class, "update"]);
-        Route::delete("countries/{country_id}", [CountriesController::class, "destroy"]);
+    $prefixes = ["countries", "states", "municipalities", "parishes", "zone"];
+    Route::prefix($prefixes[0])->group(function () {
+        Route::controller(CountriesController::class)->group(function () {
+            Route::get("/", [CountriesController::class, "index"]);
+            Route::get("/{country_id}", [CountriesController::class, "show"]);
+            Route::get("/getStates/{country_id}", [CountriesController::class, "getStates"]);
+            Route::post("/", [CountriesController::class, "store"]);
+            Route::put("/{country_id}", [CountriesController::class, "update"]);
+            Route::delete("/{country_id}", [CountriesController::class, "destroy"]);
+        });
     });
-
-    Route::controller(StatesController::class)->group(function () {
-        Route::get("states", [statesController::class, "index"]);
-        Route::get("states/{state_id}", [statesController::class, "show"]);
-        Route::post("states", [statesController::class, "store"]);
-        Route::put("states/{state_id}", [statesController::class, "update"]);
-        Route::delete("states/{state_id}", [statesController::class, "destroy"]);
+    Route::prefix($prefixes[1])->group(function () {
+        Route::controller(StatesController::class)->group(function () {
+            Route::get("/", [statesController::class, "index"]);
+            Route::get("/{state_id}", [statesController::class, "show"]);
+            Route::post("/", [statesController::class, "store"]);
+            Route::put("/{state_id}", [statesController::class, "update"]);
+            Route::delete("/{state_id}", [statesController::class, "destroy"]);
+        });
     });
 });
 
