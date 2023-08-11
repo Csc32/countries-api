@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Countries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\States;
@@ -45,9 +46,55 @@ class StatesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $errorResponse = [
+            "message" => "There was a problem to insert the state",
+            "errors" => [
+                "title" => "Bad Request",
+                "code" => 400,
+                "details" => "There are missing parameters"
+            ]
+        ];
+        $typeOfDetail = [
+            "id" => "ID provided, please delete it",
+            "name" => "Name should be a string",
+            "population" =>  "Population should be integer",
+            "country_id" =>  "Not exists a country with id " . $request->country_id
+        ];
+
+        $response = [
+            "message" => "State inserted correctly"
+        ];
+        if ($request->input() == null) {
+            return response()->json($errorResponse, 400);
+        }
+        foreach ($request->input() as $key => $value) {
+            if (isset($key) && $key == "id" || $key == "name" && is_numeric($value) || $key == 'population' && is_string($value)) {
+                $errorResponse["errors"]['details'] = $typeOfDetail[$key];
+                return response()->json(
+                    $errorResponse,
+                    400
+                );
+            }
+        }
+        $country = Countries::find($request->country_id);
+        if (!isset($country)) {
+            $errorResponse["errors"]['details'] = $typeOfDetail['country_id'];
+            return response()->json(
+                $errorResponse,
+                400
+            );
+        }
+
+        $state = new States([
+            "name" => $request->name,
+            "population" => $request->population
+        ]);
+
+        $country->states()->save($state);
+
+        return response()->json($response, 200);
     }
 
     /**
