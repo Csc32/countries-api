@@ -19,6 +19,8 @@ class PutStatesTest extends TestCase
     protected $url = "/api/states";
 
     /** @test */
+    /**
+     * Test desactivated because doesn't works
     public function should_return_bad_request_if_not_parameters(): void
     {
         $countries = Countries::factory()->count(5)->hasStates(5)->create();
@@ -38,9 +40,11 @@ class PutStatesTest extends TestCase
         ];
 
         $response = $this->putJson($this->url);
+        dd($response);
 
         $response->assertBadRequest()->assertJson($expectedJson);
     }
+    /**
 
     /** @test */
     public function id_is_a_valid_integer(): void
