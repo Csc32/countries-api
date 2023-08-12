@@ -56,7 +56,7 @@ class PutStatesTest extends TestCase
             "errors" => [
                 "title" => "Bad Request",
                 "code" => 400,
-                "details" => "There are missing parameters"
+                "details" => "The parameter should be a number"
             ]
         ];
 
@@ -83,7 +83,7 @@ class PutStatesTest extends TestCase
 
         $response = $this->putJson($this->url . "/20");
 
-        $response->assertBadRequest()->assertJson($expectedJson);
+        $response->assertNotFound()->assertJson($expectedJson);
     }
 
     /** @test */
