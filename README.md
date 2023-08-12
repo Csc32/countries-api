@@ -72,15 +72,20 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 
 **_Test cases_**:
 
-1.  [ ] should throw bad request if not a valid param
+1.  [ ] should return bad request if not parameters 
+1.  [ ] id is a belongs to a valid state
+1.  [ ] name is a string
+1.  [ ] population is integer
+1.  [ ] country id belongs to a valid country
 1.  [ ] should return a success message if data was inserted
 
 -   **DELETE: /api/states/{state_id}**
 
 **_Test cases_**:
 
-1.  [ ] should throw bad request if not a valid param
-1.  [ ] should return a success message if data deleted correctly
+1.  [ ]  should return bad request if not a valid param
+1.  [ ]  should return not found if the id doesn’t exists
+1.  [ ]  should return a success message if data deleted correctly
 
 ## EndPoints for municipalities:
 
