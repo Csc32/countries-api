@@ -72,12 +72,12 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 
 **_Test cases_**:
 
-1.  [ ] should return bad request if not parameters 
-1.  [ ] id is a belongs to a valid state
-1.  [ ] name is a string
-1.  [ ] population is integer
-1.  [ ] country id belongs to a valid country
-1.  [ ] should return a success message if data was inserted
+1.  [x] id is a valid integer 
+1.  [x] id belongs to a valid state
+1.  [x] name is a string
+1.  [x] population is integer
+1.  [x] country id belongs to a valid country
+1.  [x] update a valid state
 
 -   **DELETE: /api/states/{state_id}**
 
@@ -97,3 +97,4 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 1.  [ ] should return bad request if there is an invalid param _{state_id}_
 1.  [ ] should return data of all states and status 200
 1.  [ ] should return all states of the country
+
