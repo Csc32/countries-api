@@ -233,4 +233,14 @@ class CountriesController extends Controller
         return response()->json($successMessage, 200);
         //
     }
+    public function countStates($id)
+    {
+        $country = Countries::find($id);
+
+        $message = [
+            "country" => $country->name,
+            "totalStates" => count($country->states)
+        ];
+        return response()->json($message, 200);
+    }
 }

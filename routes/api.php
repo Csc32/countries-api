@@ -30,6 +30,7 @@ Route::middleware("api")->group(function () {
         Route::controller(CountriesController::class)->group(function () {
             Route::get("/", [CountriesController::class, "index"]);
             Route::get("/{country_id}", [CountriesController::class, "show"]);
+            Route::get("/{country_id}/countStates", [CountriesController::class, "countStates"]);
             Route::get("/getStates/{country_id}", [CountriesController::class, "getStates"]);
             Route::post("/", [CountriesController::class, "store"]);
             Route::put("/{country_id}", [CountriesController::class, "update"]);
