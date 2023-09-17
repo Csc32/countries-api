@@ -24,7 +24,7 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 - **GET: /api/countries/{country_id}/countStates**
 **_Test Cases_**:
 
-1.  [ ] should return total states of a country 
+1.  [x] should return total states of a country 
 
 -   **POST: /api/Countries/store/**
 

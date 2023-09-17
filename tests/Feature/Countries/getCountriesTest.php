@@ -83,4 +83,18 @@ class getCountriesTest extends TestCase
 
         $response->assertBadRequest()->assertJson($expectedJson);
     }
+
+    /** @test */
+    public function should_count_the_states_of_country(): void
+    {
+        $countries = Countries::factory()->count(5)->hasStates(24)->create();
+
+        $country = Countries::query()->get()->first();
+        $response = $this->getJson($this->endPoint . "/" . $country->id . "/countStates");
+
+        $response->assertOk()->assertJson([
+            "country" => $country->name,
+            "totalStates" => 24
+        ]);
+    }
 }
