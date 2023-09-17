@@ -21,6 +21,11 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 1.  [x] should return bad request if the states doesn't exists
 1.  [x] should return all states of a country
 
+- **GET: /api/countries/{country_id}/countStates**
+**_Test Cases_**:
+
+1.  [ ] should return total states of a country 
+
 -   **POST: /api/Countries/store/**
 
 **_Test Cases_**:
@@ -83,9 +88,9 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 
 **_Test cases_**:
 
-1.  [ ]  should return bad request if not a valid param
-1.  [ ]  should return not found if the id doesn’t exists
-1.  [ ]  should return a success message if data deleted correctly
+1.  [x]  should return bad request if not a valid param
+1.  [x]  should return not found if the id doesn’t exists
+1.  [x]  should return a success message if data deleted correctly
 
 ## EndPoints for municipalities:
 
