@@ -6,6 +6,7 @@ use App\Models\Countries;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\States;
+use Symfony\Component\VarDumper\VarDumper;
 
 class StatesController extends Controller
 {
@@ -206,8 +207,25 @@ class StatesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $state = States::find($id);
+        if (!isset($state)) {
+            return response()->json(
+                [
+                    "message" => "Was a problem to delete the state",
+                    "errors" => [
+                        "title" => "Not Found",
+                        "status" => 404,
+                        "details" => "Not exist a country with id $id"
+                    ]
+                ],
+                400
+            );
+        }
+        $state->delete();
+        return response()->json([
+            "message" => "country deleted correctly"
+        ], 200);
     }
 }
