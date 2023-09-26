@@ -98,7 +98,7 @@ This **_API_** was created using Laravel and Test Driven Development (TDD) for l
 
 **_Test cases_**:
 
-1.  [ ] should return 404 if there is not municipalities
+1.  [ ] should return 404 if there is not municipalities of a state
 1.  [ ] should return bad request if there is an invalid param _{state_id}_
 1.  [ ] should return municipalities of a country 
 1.  [ ] should count all parishes from a municipaltity
